@@ -1,0 +1,29 @@
+.btn,
+.linkBtn {
+  color: #fff;
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #2ecc71;
+  text-transform: capitalize;
+  border-radius: 4px;
+  transform: translateY(0);
+  filter: brightness(1);
+  transition: all 0.3s ease;
+  box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.btn:hover,
+.linkBtn:hover {
+  filter: brightness(1.15);
+}
+
+.btn:active,
+.linkBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.linkBtn {
+  text-decoration: none;
+}
