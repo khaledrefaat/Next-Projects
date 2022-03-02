@@ -24,6 +24,10 @@
   box-shadow: 0 2.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
+.btn {
+  cursor: pointer;
+}
+
 .linkBtn {
   text-decoration: none;
 }
