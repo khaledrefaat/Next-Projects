@@ -1,15 +1,21 @@
-import { useRouter } from 'next/router';
-import { getEventById } from '../../DUMMY_CONTENT';
 import EventSummary from '../../components/event-detail/event-summary';
 import EventLogistics from '../../components/event-detail/event-logistics';
 import EventContent from '../../components/event-detail/event-content';
 
-const EventDetail = () => {
-  const router = useRouter();
-  const { eventId } = router.query;
+interface EventDetailProps {
+  event: {
+    id: string;
+    title: string;
+    description: string;
+    location: string;
+    date: string;
+    image: string;
+    isFeatured: boolean;
+  };
+}
 
-  const event = getEventById(eventId);
-
+const EventDetail: React.FC<EventDetailProps> = ({ event }) => {
+  console.log(event);
   return event ? (
     <>
       <EventSummary title={event.title} />
@@ -29,3 +35,18 @@ const EventDetail = () => {
 };
 
 export default EventDetail;
+
+export async function getServerSideProps({ params, req, res }) {
+  const response = await fetch(`http://localhost:9000/event/${params.eventId}`);
+
+  if (!response.ok) {
+    res.writeHead(302, {
+      location: '/events',
+    });
+    res.end();
+    return { props: {} };
+  }
+
+  const data = await response.json();
+  return { props: { event: data } };
+}

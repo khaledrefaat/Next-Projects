@@ -5,7 +5,21 @@ import DateIcon from '../icons/date-icon';
 import Button from '../Ui/Button';
 import classes from './events.module.css';
 
-const EventItem = ({ image, title, date, location, id }) => {
+interface EventsItemProps {
+  image: string;
+  title: string;
+  date: string;
+  location: string;
+  id: string;
+}
+
+const EventItem: React.FC<EventsItemProps> = ({
+  image,
+  title,
+  date,
+  location,
+  id,
+}) => {
   const humanReadableDate = new Date(date).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',

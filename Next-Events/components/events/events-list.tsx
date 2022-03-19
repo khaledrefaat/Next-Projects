@@ -1,7 +1,8 @@
+import { Events } from '../events.model';
 import EventItem from './events-item';
 import classes from './events.module.css';
 
-const EventsList = ({ events }) => {
+const EventsList: React.FC<Events> = ({ events }) => {
   return (
     <ul className={classes.list}>
       {events.map(event => {

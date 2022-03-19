@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import EventsList from '../../components/events/events-list';
 import EventsSearch from '../../components/events/events-search';
-import { getAllEvents } from '../../DUMMY_CONTENT';
+import { Events } from '../../components/events.model';
 
-const Event: React.FC = () => {
-  const events = getAllEvents();
+const Event: React.FC<Events> = ({ events }) => {
   const router = useRouter();
 
   function findEventsHandler(year: string, month: string) {
@@ -20,3 +19,9 @@ const Event: React.FC = () => {
 };
 
 export default Event;
+
+export async function getStaticProps() {
+  const res = await fetch('http://localhost:9000');
+  const data = await res.json();
+  return { props: { events: data } };
+}
