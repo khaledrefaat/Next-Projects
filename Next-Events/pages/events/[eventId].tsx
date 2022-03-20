@@ -1,21 +1,9 @@
 import EventSummary from '../../components/event-detail/event-summary';
 import EventLogistics from '../../components/event-detail/event-logistics';
 import EventContent from '../../components/event-detail/event-content';
+import { Event } from '../../components/events.model';
 
-interface EventDetailProps {
-  event: {
-    id: string;
-    title: string;
-    description: string;
-    location: string;
-    date: string;
-    image: string;
-    isFeatured: boolean;
-  };
-}
-
-const EventDetail: React.FC<EventDetailProps> = ({ event }) => {
-  console.log(event);
+const EventDetail: React.FC<Event> = ({ event }) => {
   return event ? (
     <>
       <EventSummary title={event.title} />
@@ -36,17 +24,25 @@ const EventDetail: React.FC<EventDetailProps> = ({ event }) => {
 
 export default EventDetail;
 
-export async function getServerSideProps({ params, req, res }) {
-  const response = await fetch(`http://localhost:9000/event/${params.eventId}`);
+export async function getStaticProps(context) {
+  const res = await fetch(
+    'http://localhost:9000/event/' + context.params.eventId
+  );
+  const data = await res.json();
 
-  if (!response.ok) {
-    res.writeHead(302, {
-      location: '/events',
-    });
-    res.end();
-    return { props: {} };
-  }
+  return {
+    props: { event: data },
+  };
+}
 
-  const data = await response.json();
-  return { props: { event: data } };
+export async function getStaticPaths() {
+  const res = await fetch('http://localhost:9000');
+  const events = await res.json();
+
+  const paths = events.map(event => ({ params: { eventId: event.id } }));
+
+  return {
+    paths,
+    fallback: false,
+  };
 }
