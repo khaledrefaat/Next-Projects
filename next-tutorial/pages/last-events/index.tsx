@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import useSWR, { Fetcher } from 'swr';
 
 interface Event {
   id: string;
@@ -12,56 +13,40 @@ interface Event {
 }
 
 const LastSales: NextPage = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const fetcher: Fetcher = async (url: string) => {
+    const res = await fetch(url);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let data;
-      try {
-        setIsLoading(true);
-        const res = await fetch('http://localhost:9000', {
-          method: 'GET',
-        });
-        data = await res.json();
-        setEvents(data);
-        setIsLoading(false);
-        setError(false);
-      } catch (err) {
-        console.log(err);
-        setError(true);
-        return setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (!res.ok) {
+      const error = new Error('An error occurred while fetching the data.');
+      const errorInfo = { info: await res.json(), status: res.status };
+      Object.assign(error, errorInfo);
+      throw error;
+    }
+    return await res.json();
+  };
 
-  if (isLoading) {
+  const response = useSWR('http://localhost:9000', fetcher);
+  const data = response.data as Event[];
+
+  if (!data) {
     return (
       <div>
         <h2>Loading...</h2>
       </div>
     );
   }
-  if (error) {
+
+  if (response.error) {
     return (
       <div>
-        <h2>Error</h2>
-      </div>
-    );
-  }
-  if (events.length === 0) {
-    return (
-      <div>
-        <h2>No Events Were Found</h2>
+        <h2>Something went wrong please try again later</h2>
       </div>
     );
   }
 
   return (
     <ul>
-      {events.map(event => (
+      {data.map((event: Event) => (
         <div key={event.id}>
           <h2>{event.title}</h2>
           <p>{event.description}</p>
