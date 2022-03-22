@@ -29,9 +29,7 @@ const EventItem: React.FC<EventsItemProps> = ({
   const formattedAddress: string = location.replace(', ', '\n');
   return (
     <li className={classes.item}>
-      <div className={classes.imageContainer}>
-        <Image src={`/${image}`} alt={title} layout="fill" priority />
-      </div>
+      <Image src={`/${image}`} alt={title} width="300" height="300" priority />
       <div className={classes.content}>
         <div>
           <h2>{title}</h2>

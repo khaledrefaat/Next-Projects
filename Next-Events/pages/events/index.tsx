@@ -3,6 +3,7 @@ import EventsList from '../../components/events/events-list';
 import EventsSearch from '../../components/events/events-search';
 import { Events } from '../../components/events.model';
 import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 
 const Event: NextPage<Events> = ({ events }) => {
   const router = useRouter();
@@ -13,6 +14,9 @@ const Event: NextPage<Events> = ({ events }) => {
 
   return (
     <>
+      <Head>
+        <title>All Events</title>
+      </Head>
       <EventsSearch onSearch={findEventsHandler} />
       <EventsList events={events} />;
     </>

@@ -4,6 +4,7 @@ import EventContent from '../../components/event-detail/event-content';
 import { Event } from '../../components/events.model';
 import { GetStaticPaths, NextPage } from 'next';
 import Spinner from '../../components/Ui/Spinner';
+import Head from 'next/head';
 
 const EventDetail: NextPage<Event> = ({ event }) => {
   if (!event) {
@@ -11,6 +12,10 @@ const EventDetail: NextPage<Event> = ({ event }) => {
   }
   return (
     <>
+      <Head>
+        <title>{event.title}</title>
+        <meta name="description" content={event.description} />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}
