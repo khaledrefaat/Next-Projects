@@ -19,13 +19,9 @@ const ProductDetailPage: NextPage<Product> = ({ title, description }) => {
 export default ProductDetailPage;
 
 export const getStaticProps: GetStaticProps = async context => {
-  const filePath = path.join(process.cwd(), 'data', 'DUMMY_BACKEND.json');
-  const jsonData = await fs.readFileSync(filePath);
-  const { DUMMY_DATA } = await JSON.parse(jsonData.toString());
+  const res = await fetch('http://localhost:3000/api/' + context.params!.pid);
+  const product = await res.json();
 
-  const product = DUMMY_DATA.find(
-    (product: Product) => product.id === context.params!.pid
-  );
   if (!product) return { notFound: true };
   return {
     props: {
@@ -36,12 +32,10 @@ export const getStaticProps: GetStaticProps = async context => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const filePath = path.join(process.cwd(), 'data', 'DUMMY_BACKEND.json');
-  const jsonData = await fs.readFileSync(filePath);
+  const res = await fetch('http://localhost:3000/api');
+  const data = await res.json();
 
-  const { DUMMY_DATA } = await JSON.parse(jsonData.toString());
-
-  const pathsWithParams: { params: { pid: string } }[] = DUMMY_DATA.map(
+  const pathsWithParams: { params: { pid: string } }[] = data.map(
     (product: Product) => ({
       params: { pid: product.id },
     })
