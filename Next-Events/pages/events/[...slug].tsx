@@ -72,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 
   const response = await fetch(
-    `http://localhost:9000/filter/${slug[0]}/${slug[1]}`
+    `http://localhost:3000/api/events/${slug[0]}/${slug[1]}`
   );
   const data = await response.json();
 

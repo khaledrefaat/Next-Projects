@@ -26,7 +26,7 @@ const Event: NextPage<Events> = ({ events }) => {
 export default Event;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch('http://localhost:9000');
+  const res = await fetch('http://localhost:3000/api');
   const data = await res.json();
   return { props: { events: data }, revalidate: 600 /* 10minuets */ };
 };

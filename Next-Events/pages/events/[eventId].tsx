@@ -36,7 +36,7 @@ export async function getStaticProps(context) {
   let data;
   try {
     const res = await fetch(
-      'http://localhost:9000/event/' + context.params.eventId
+      'http://localhost:3000/api/events/' + context.params.eventId
     );
     data = await res.json();
   } catch (err) {
@@ -54,7 +54,7 @@ export async function getStaticProps(context) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // just preRender the featured events it would be overkill to render every event
-  const res = await fetch('http://localhost:9000/featured');
+  const res = await fetch('http://localhost:3000/api/featured');
   const events = await res.json();
 
   const paths = events.map(event => ({ params: { eventId: event.id } }));

@@ -30,4 +30,4 @@ const DUMMY_EVENTS = [
     isFeatured: true,
   },
 ];
-module.exports = DUMMY_EVENTS;
+export default DUMMY_EVENTS;

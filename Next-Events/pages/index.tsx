@@ -1,4 +1,5 @@
 import EventsList from '../components/events/events-list';
+import NewsLetterRegistration from '../components/input/newsletter-registration';
 import { Events } from '../components/events.model';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -13,6 +14,7 @@ const HomePage: NextPage<Events> = ({ events }) => {
         />
         <title>Home</title>
       </Head>
+      <NewsLetterRegistration />
       <EventsList events={events} />
     </>
   );
@@ -21,7 +23,7 @@ const HomePage: NextPage<Events> = ({ events }) => {
 export default HomePage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch('http://localhost:9000/featured');
+  const res = await fetch('http://localhost:3000/api/featured');
   const data = await res.json();
   return {
     props: { events: data },
