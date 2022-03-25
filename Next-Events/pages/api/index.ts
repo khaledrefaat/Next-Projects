@@ -1,21 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import DUMMY_EVENTS from '../../data/DUMMY_CONTENT';
+import Events from '../../data/Events';
 
-// router.get('/filter/:year/:month', (req, res, next) => {
-//   const { year, month } = req.params;
-//   let filteredEvents = DUMMY_EVENTS.filter(event => {
-//     const eventDate = new Date(event.date);
-//     return (
-//       eventDate.getFullYear() === +year && eventDate.getMonth() === +month - 1
-//     );
-//   });
-//   res.json(filteredEvents);
-// });
-
-// module.exports = router;
-
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === 'GET') {
-    return res.json(DUMMY_EVENTS);
+    return res.json(Events);
+  }
+
+  if (req.method === 'POST') {
+    const { title, description, location, date, image, isFeatured } = req.body;
+
+    if (
+      !title ||
+      !description ||
+      !location ||
+      !date ||
+      !image ||
+      isFeatured === 'undefined'
+    ) {
+      return res.status(422).json({ msg: 'Invalid inputs.' });
+    }
   }
 }

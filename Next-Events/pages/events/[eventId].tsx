@@ -5,6 +5,7 @@ import { Event } from '../../components/events.model';
 import { GetStaticPaths, NextPage } from 'next';
 import Spinner from '../../components/Ui/Spinner';
 import Head from 'next/head';
+import Comments from '../../components/input/comments';
 
 const EventDetail: NextPage<Event> = ({ event }) => {
   if (!event) {
@@ -26,6 +27,7 @@ const EventDetail: NextPage<Event> = ({ event }) => {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </>
   );
 };

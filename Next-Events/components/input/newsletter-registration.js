@@ -1,8 +1,28 @@
+import { useRef, useState } from 'react';
 import classes from './newsletter-registration.module.css';
 
 function NewsletterRegistration() {
-  function registrationHandler(event) {
+  const [error, setError] = useState('');
+  const inputRef = useRef(null);
+
+  async function registrationHandler(event) {
     event.preventDefault();
+    try {
+      const res = await fetch('http://localhost:3000/api/newsletter', {
+        method: 'POST',
+        body: JSON.stringify({ email: inputRef.current.value }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        return setError(data.msg);
+      }
+      setError(null);
+    } catch (err) {
+      console.log(err);
+    }
 
     // fetch user input (state or refs)
     // optional: validate input
@@ -15,14 +35,16 @@ function NewsletterRegistration() {
       <form onSubmit={registrationHandler}>
         <div className={classes.control}>
           <input
-            type='email'
-            id='email'
-            placeholder='Your email'
-            aria-label='Your email'
+            type="email"
+            id="email"
+            placeholder="Your email"
+            aria-label="Your email"
+            ref={inputRef}
           />
           <button>Register</button>
         </div>
       </form>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import DUMMY_EVENTS from '../../../data/DUMMY_CONTENT';
+import Events from '../../../data/Events';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { slug } = req.query;
@@ -17,7 +17,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return { notFound: true };
   }
   if (req.method === 'GET') {
-    let filteredEvents = DUMMY_EVENTS.filter(event => {
+    let filteredEvents = Events.filter(event => {
       const eventDate = new Date(event.date);
       return (
         eventDate.getFullYear() === numYear &&

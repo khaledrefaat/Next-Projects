@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import CommentList from './comment-list';
 import NewComment from './new-comment';
@@ -7,14 +7,50 @@ import classes from './comments.module.css';
 function Comments(props) {
   const { eventId } = props;
 
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(true);
+  const [comments, setComments] = useState([]);
 
-  function toggleCommentsHandler() {
-    setShowComments((prevStatus) => !prevStatus);
+  const fetchComments = useCallback(() => {
+    async function fetchComments() {
+      try {
+        const res = await fetch(
+          'http://localhost:3000/api/comments/' + eventId
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setComments(data);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchComments();
+  }, [eventId]);
+
+  async function toggleCommentsHandler() {
+    fetchComments();
+    setShowComments(prevStatus => !prevStatus);
   }
 
-  function addCommentHandler(commentData) {
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
+
+  async function addCommentHandler(commentData) {
     // send data to API
+    try {
+      const res = await fetch('http://localhost:3000/api/comments/' + eventId, {
+        method: 'POST',
+        body: JSON.stringify(commentData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -23,7 +59,7 @@ function Comments(props) {
         {showComments ? 'Hide' : 'Show'} Comments
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList />}
+      {showComments && <CommentList comments={comments} />}
     </section>
   );
 }
