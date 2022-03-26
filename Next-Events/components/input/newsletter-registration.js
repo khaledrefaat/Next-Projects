@@ -20,6 +20,7 @@ function NewsletterRegistration() {
         return setError(data.msg);
       }
       setError(null);
+      inputRef.current.value = '';
     } catch (err) {
       console.log(err);
     }
@@ -44,7 +45,16 @@ function NewsletterRegistration() {
           <button>Register</button>
         </div>
       </form>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+      {error && (
+        <p style={{ color: 'red', textAlign: 'center', marginTop: 5 }}>
+          {error}
+        </p>
+      )}
+      {error === null && (
+        <p style={{ color: '#27ae60', textAlign: 'center', marginTop: 5 }}>
+          Done ^_^
+        </p>
+      )}
     </section>
   );
 }

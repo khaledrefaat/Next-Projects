@@ -40,14 +40,14 @@ function Comments(props) {
   async function addCommentHandler(commentData) {
     // send data to API
     try {
-      const res = await fetch('http://localhost:3000/api/comments/' + eventId, {
+      await fetch('http://localhost:3000/api/comments/' + eventId, {
         method: 'POST',
         body: JSON.stringify(commentData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      const data = await res.json();
+      fetchComments();
     } catch (err) {
       console.log(err);
     }
