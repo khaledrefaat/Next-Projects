@@ -24,10 +24,13 @@ export default async function handler(
       if (typeof eventId === 'string') {
         const comment = new Comment(email, name, text, eventId);
         await comment.save();
-        res.status(201).json(comment);
+        res.status(201).json({ msg: 'done' });
       }
     } catch (err) {
       console.log(err);
+      res
+        .status(500)
+        .json({ msg: 'Something went wrong, please try again later.' });
     }
   }
 }

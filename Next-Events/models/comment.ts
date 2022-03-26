@@ -27,6 +27,7 @@ export default class Comment {
     const comments = await this.db
       .collection('comments')
       .find({ eventId })
+      .sort({ _id: -1 })
       .toArray();
     await this.client.close();
     return comments;

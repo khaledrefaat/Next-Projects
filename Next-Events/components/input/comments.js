@@ -9,6 +9,7 @@ function Comments(props) {
 
   const [showComments, setShowComments] = useState(true);
   const [comments, setComments] = useState([]);
+  const [error, setError] = useState('');
 
   const fetchComments = useCallback(() => {
     async function fetchComments() {
@@ -40,13 +41,20 @@ function Comments(props) {
   async function addCommentHandler(commentData) {
     // send data to API
     try {
-      await fetch('http://localhost:3000/api/comments/' + eventId, {
+      const res = await fetch('http://localhost:3000/api/comments/' + eventId, {
         method: 'POST',
         body: JSON.stringify(commentData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.msg);
+        return;
+      }
+
       fetchComments();
     } catch (err) {
       console.log(err);
@@ -60,6 +68,11 @@ function Comments(props) {
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
       {showComments && <CommentList comments={comments} />}
+      {
+        <p style={{ color: 'red', textAlign: 'center', marginTop: 5 }}>
+          {error}
+        </p>
+      }
     </section>
   );
 }

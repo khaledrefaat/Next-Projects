@@ -17,6 +17,9 @@ export default async function handler(
       res.status(201).json({ msg: 'done' });
     } catch (err) {
       console.log(err);
+      res
+        .status(500)
+        .json({ msg: 'Something went wrong, please try again later.' });
     }
   }
 }
