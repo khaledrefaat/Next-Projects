@@ -1,12 +1,19 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
+import NotificationContext from '../../store/notification-context';
 import classes from './newsletter-registration.module.css';
 
 function NewsletterRegistration() {
-  const [error, setError] = useState('');
+  const notificationCtx = useContext(NotificationContext);
+
   const inputRef = useRef(null);
 
   async function registrationHandler(event) {
     event.preventDefault();
+    notificationCtx.showNotification({
+      title: 'Registering...',
+      message: 'Pending Registering...',
+      status: 'pending',
+    });
     try {
       const res = await fetch('http://localhost:3000/api/newsletter', {
         method: 'POST',
@@ -17,17 +24,22 @@ function NewsletterRegistration() {
       });
       if (!res.ok) {
         const data = await res.json();
-        return setError(data.msg);
+        throw new Error(data.msg || 'Something went wrong.');
       }
-      setError(null);
+      notificationCtx.showNotification({
+        title: 'Success',
+        message: 'Successfully registered for newsletter ^_^',
+        status: 'success',
+      });
       inputRef.current.value = '';
     } catch (err) {
       console.log(err);
+      notificationCtx.showNotification({
+        title: 'Error',
+        message: err.message,
+        status: 'error',
+      });
     }
-
-    // fetch user input (state or refs)
-    // optional: validate input
-    // send valid data to API
   }
 
   return (
@@ -45,16 +57,6 @@ function NewsletterRegistration() {
           <button>Register</button>
         </div>
       </form>
-      {error && (
-        <p style={{ color: 'red', textAlign: 'center', marginTop: 5 }}>
-          {error}
-        </p>
-      )}
-      {error === null && (
-        <p style={{ color: '#27ae60', textAlign: 'center', marginTop: 5 }}>
-          Done ^_^
-        </p>
-      )}
     </section>
   );
 }

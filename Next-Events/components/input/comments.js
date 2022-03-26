@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import CommentList from './comment-list';
 import NewComment from './new-comment';
 import classes from './comments.module.css';
+import NotificationContext from '../../store/notification-context';
 
-function Comments(props) {
-  const { eventId } = props;
-
+function Comments({ eventId }) {
   const [showComments, setShowComments] = useState(true);
   const [comments, setComments] = useState([]);
   const [error, setError] = useState('');
+
+  const notificationCtx = useContext(NotificationContext);
 
   const fetchComments = useCallback(() => {
     async function fetchComments() {
@@ -40,6 +41,11 @@ function Comments(props) {
 
   async function addCommentHandler(commentData) {
     // send data to API
+    notificationCtx.showNotification({
+      title: 'Posting...',
+      message: 'Posting your comment...',
+      status: 'pending',
+    });
     try {
       const res = await fetch('http://localhost:3000/api/comments/' + eventId, {
         method: 'POST',
@@ -51,13 +57,22 @@ function Comments(props) {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.msg);
-        return;
+        throw new Error(data.msg);
       }
 
       fetchComments();
+      notificationCtx.showNotification({
+        title: 'Success',
+        message: 'Successfully posted your comment ^_^',
+        status: 'success',
+      });
     } catch (err) {
       console.log(err);
+      notificationCtx.showNotification({
+        title: 'Error',
+        message: err.message,
+        status: 'error',
+      });
     }
   }
 
