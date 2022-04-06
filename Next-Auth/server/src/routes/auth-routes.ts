@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { postSignin, postSignup } from '../controllers/auth-controllers';
+import {
+  postSignin,
+  postSignup,
+  postReset,
+} from '../controllers/auth-controllers';
+import checkAuth from '../middlewares/check-auth';
 import User from '../models/user';
 
 const router = Router();
@@ -32,6 +37,24 @@ router.post(
       .trim(),
   ],
   postSignup
+);
+
+router.use(checkAuth);
+
+router.post(
+  '/reset',
+  [
+    body('password', 'New password should be at least 6chars')
+      .isLength({ min: 6 })
+      .trim(),
+    body('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Password confirmation does not match password');
+      }
+      return true;
+    }),
+  ],
+  postReset
 );
 
 export default router;
