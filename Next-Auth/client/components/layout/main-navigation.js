@@ -1,26 +1,35 @@
 import Link from 'next/link';
+import { useContext } from 'react';
+import { AuthContext } from '../../store/auth-context';
 
 import classes from './main-navigation.module.css';
 
 function MainNavigation() {
+  const authContext = useContext(AuthContext);
+
   return (
     <header className={classes.header}>
-      <Link href='/'>
+      <Link href="/">
         <a>
           <div className={classes.logo}>Next Auth</div>
         </a>
       </Link>
       <nav>
         <ul>
-          <li>
-            <Link href='/auth'>Login</Link>
-          </li>
-          <li>
-            <Link href='/profile'>Profile</Link>
-          </li>
-          <li>
-            <button>Logout</button>
-          </li>
+          {authContext?.auth ? (
+            <>
+              <li>
+                <Link href="/profile">Profile</Link>
+              </li>
+              <li>
+                <button onClick={() => authContext.logout()}>Logout</button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link href="/auth">Login</Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

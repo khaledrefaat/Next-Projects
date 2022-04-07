@@ -9,6 +9,12 @@ const auth_routes_1 = __importDefault(require("./routes/auth-routes"));
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+    next();
+});
 app.use('/auth', auth_routes_1.default);
 app.use((err, req, res, next) => {
     res.status(err.code || 500);
