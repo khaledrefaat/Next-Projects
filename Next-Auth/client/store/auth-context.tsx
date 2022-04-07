@@ -23,7 +23,6 @@ export const AuthContextProvider: React.FC = ({ children }) => {
   const [auth, setAuth] = useState<Auth | null | undefined>(null);
 
   function login(data: Auth) {
-    console.log(data);
     const tokenExpirationDate =
       data.expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
 
